@@ -23,10 +23,7 @@ alexaRouter.use(verifier);
 
 
 alexaRouter.get("/tomorrow", function(req, res) {
-    var d = new Date();
-    var tomorrow = new Date();
-    tomorrow.setDate(d.getDate() + 8);
-    
+
     if (req.body.request.type === 'LaunchRequest') {
       res.json(getTomorrowSchedule("STE4"));
     } else if (req.body.request.type === 'IntentRequest') {
@@ -40,8 +37,6 @@ alexaRouter.get("/tomorrow", function(req, res) {
   
       }
     }
-    
-    
 });
 
 app.get("/tomorrow", function(req, res) {
@@ -83,7 +78,7 @@ schedule = function(theUrl)
 }
 
 parser = function(sched,day_i,month_i,year_i) {
-  //This function get all of the course from one specific day 
+    //This function get all of the course from one specific day 
     var s = JSON.parse(sched) 
     //return s.items.filter(d => d.date == day)
     
@@ -111,6 +106,7 @@ parser = function(sched,day_i,month_i,year_i) {
 
 
   response_to_Alexa = function(plain_text){
+    const speechOutput = "<speak>" + plain_text + "</speak>"
       return {
         "version": "1.0",
         "response": {
