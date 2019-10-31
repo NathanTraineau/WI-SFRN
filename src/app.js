@@ -3,6 +3,16 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var xhr = new XMLHttpRequest();
 const express = require("express");
 let app = new express();
+const verifier = require('alexa-verifier-middleware');
+
+const alexaRouter = express.Router();
+app.use('/alexa', alexaRouter);
+
+// attach the verifier middleware first because it needs the entire
+// request body, and express doesn't expose this on the request object
+
+alexaRouter.use(verifier);
+//alexaRouter.use(bodyParser.json());
 
 //We receive a request from alexa, the structure is simple and we should parse this request
 //The given informations are : the id of the user
@@ -10,7 +20,7 @@ let app = new express();
 //From these informations we should be able to get the class of the user (that we stored previously)
 //And request the good url to get the course from the year
 //We should then parse the response to get what the user wants and send a proper json file in response to alexa.
-app.get("/tomorrow", function(req, res) {
+alexaRouter.get("/tomorrow", function(req, res) {
     var d = new Date();
     var tomorrow = new Date();
     tomorrow.setDate(d.getDate() + 8);
@@ -72,9 +82,6 @@ parser = function(sched,day_i,month_i,year_i) {
   response_to_Alexa = function(plain_text){
       return {
         "version": "1.0",
-        "sessionAttributes": {
-          "key": "value"
-        },
         "response": {
           "outputSpeech": {
             "type": "PlainText",
