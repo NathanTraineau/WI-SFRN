@@ -20,38 +20,38 @@ alexaRouter.use(verifier);
 //From these informations we should be able to get the class of the user (that we stored previously)
 //And request the good url to get the course from the year
 //We should then parse the response to get what the user wants and send a proper json file in response to alexa.
+
+
 alexaRouter.get("/tomorrow", function(req, res) {
     var d = new Date();
     var tomorrow = new Date();
     tomorrow.setDate(d.getDate() + 8);
-    if (req.query.class != null){
-        const user_class = req.query.class;
-        const sched = schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
-        const parsed = parser(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
-        const ress = response(parsed)
-        const plain_text = ress.join(" ")
-        res.send(plain_text);
-    }else{
-        res.send("no data")
+    
+    if (req.body.request.type === 'LaunchRequest') {
+      res.json(getTomorrowSchedule("STE4"));
+    } else if (req.body.request.type === 'IntentRequest') {
+      switch (req.body.request.intent.name) {
+        case 'GetTomorrowSchedule':
+            res.json(getTomorrowSchedule("IG5"));
+          break;
+        default:
+            const response = response_to_Alexa("no data")
+            res.json(response)
+  
+      }
     }
+    
     
 });
 
 app.get("/tomorrow", function(req, res) {
-  var d = new Date();
-  var tomorrow = new Date();
-  tomorrow.setDate(d.getDate() + 8);
   if (req.query.class != null){
-      const user_class = req.query.class;
-      const sched = schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
-      const parsed = parser(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
-      const ress = response(parsed)
-      const plain_text = ress.join(" ")
-      res.send(plain_text);
+    const user_class = req.query.class;
+    res.json(getTomorrowSchedule(user_class)) 
   }else{
-      res.send("no data")
-  }
-  
+    const response = response_to_Alexa("no data")
+    return response;
+}
 });
 
 let port = 5000;
@@ -59,6 +59,20 @@ app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
 });
 
+
+function getTomorrowSchedule(user_class){
+  var d = new Date();
+  var tomorrow = new Date();
+  tomorrow.setDate(d.getDate() + 8);
+  
+      const sched = schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
+      const parsed = parser(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
+      const ress = plain_text_array(parsed)
+      const plain_text = ress.join(" ")
+      const response = response_to_Alexa(plain_text)
+      return response;
+  
+}
 
 schedule = function(theUrl)
 {
@@ -69,7 +83,7 @@ schedule = function(theUrl)
 }
 
 parser = function(sched,day_i,month_i,year_i) {
-  //We should get all of the course from one specific day 
+  //This function get all of the course from one specific day 
     var s = JSON.parse(sched) 
     //return s.items.filter(d => d.date == day)
     
@@ -86,7 +100,7 @@ parser = function(sched,day_i,month_i,year_i) {
   
   }
 
-  response = function(parsed){
+  plain_text_array = function(parsed){
       //This function get the info the user should get on the courses
       const res = parsed.map( function(course) {
           let info = "You have " + course.name + " from " + course.start_time + " to " + course.end_time + " at the location " + course.location;
