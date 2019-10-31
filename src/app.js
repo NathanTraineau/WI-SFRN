@@ -37,6 +37,23 @@ alexaRouter.get("/tomorrow", function(req, res) {
     
 });
 
+app.get("/tomorrow", function(req, res) {
+  var d = new Date();
+  var tomorrow = new Date();
+  tomorrow.setDate(d.getDate() + 8);
+  if (req.query.class != null){
+      const user_class = req.query.class;
+      const sched = schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
+      const parsed = parser(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
+      const ress = response(parsed)
+      const plain_text = ress.join(" ")
+      res.send(plain_text);
+  }else{
+      res.send("no data")
+  }
+  
+});
+
 let port = 5000;
 app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
