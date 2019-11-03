@@ -59,7 +59,6 @@ function getTomorrowSchedule(user_class){
   var d = new Date();
   var tomorrow = new Date();
   tomorrow.setDate(d.getDate() + 8);
-  
       const sched = schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
       const parsed = parser(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
       const ress = plain_text_array(parsed)
