@@ -1,32 +1,40 @@
+// ---------------------------------------------------------
+// ----------------------- CONST ---------------------------
+// ---------------------------------------------------------
+
 var assert = require('assert');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var xhr = new XMLHttpRequest();
 const express = require("express");
 let app = new express();
 const verifier = require('alexa-verifier-middleware');
-
 const alexaRouter = express.Router();
+
+
+// ---------------------------------------------------------
+// ----------------------- FUNCTIONS -----------------------
+// ---------------------------------------------------------
+
 app.use('/alexa', alexaRouter);
 
 // attach the verifier middleware first because it needs the entire
 // request body, and express doesn't expose this on the request object
-
 alexaRouter.use(verifier);
-//alexaRouter.use(bodyParser.json());
 
-//We receive a request from alexa, the structure is simple and we should parse this request
-//The given informations are : the id of the user
+
+//We receive a request from Alexa, the structure is simple and we should parse this request
+//The given information are : the id of the user
 //What he wants (the schedule for tomorrow, where does the next course take place, update his class)
-//From these informations we should be able to get the class of the user (that we stored previously)
+//From these information, we should be able to get the class of the user (that we stored previously)
 //And request the good url to get the course from the year
 //We should then parse the response to get what the user wants and send a proper json file in response to alexa.
 
 alexaRouter.post("/", function(req, res) {
 
+    //ACTION PAR DEFAULT AU LANCEMENT
     if (req.body.request.type === 'LaunchRequest') {
       res.json(getTomorrowSchedule("STE4"));
-
-    } else if (req.body.request.type === 'IntentRequest') {
+    } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
       switch (req.body.request.intent.name) {
         case 'GetTomorrowSchedule':
             res.json(getTomorrowSchedule("IG5","1"));
@@ -39,6 +47,8 @@ alexaRouter.post("/", function(req, res) {
 });
 
 
+// POUR LES TESTS PCQ SINON PLANTE VU QUE C'EST PAS ALEXA QUI RENVOIE LA REQUETE
+// --------------------------- LOCAL ----------------------------------
 app.get("/tomorrow", function(req, res) {
     if (req.query.class != null){
       const user_class = req.query.class;
@@ -49,6 +59,7 @@ app.get("/tomorrow", function(req, res) {
       res.json(response);
   }
 });
+// -------------------------------------------------------------
 
 let port = 5000;
 app.listen(port, function() {
@@ -56,11 +67,14 @@ app.listen(port, function() {
 });
 
 
+
+// GET THE SCHEDULE FOR TOMORROW
 getTomorrowSchedule = function(user_class,group){
     return getDaySchedule(user_class,group,1);
 } 
 
 
+// GET THE SCHEDULE FOR THE DAY X
 function getDaySchedule(user_class,group, numberOfDayFromToday){
   //This function take the class user, its group and the number of day from today
   //With this information it get the right schedule, parse the result and build a response for alexa.
@@ -70,7 +84,7 @@ function getDaySchedule(user_class,group, numberOfDayFromToday){
   tomorrow.setMonth(d.getMonth() + numberOfDayFromToday);
   const sched = schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
   const tomorrowSchedule = scheduleOftheDay(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
-  //We get the courses of the groupe of our user
+  //We get the courses of the group of our user
   const tomorrowScheduleParsedGroup = parseGroup(tomorrowSchedule,group)
   //We sort the course so we have them in the time order
   const tomorrowScheduleSorted = sortedSchedule(tomorrowScheduleParsedGroup)
@@ -82,6 +96,7 @@ function getDaySchedule(user_class,group, numberOfDayFromToday){
   return response;
 }
 
+// GET SCHEDULE FOR THE GIVEN GROUP (LIKE "OPTION 1")
 parseGroup = function(schedule,group){
   return schedule.filter(function(course) {
     if(course.hasOwnProperty("grp")){
@@ -96,6 +111,7 @@ parseGroup = function(schedule,group){
   })
 }
 
+// ORDER THE DIFFERENT SLOTS BY HOURS
 sortedSchedule = function(scheduleToSort,scheduleSorted = JSON.parse('{"courses":[]}'))
 {
   //This function get a JSON 
@@ -126,7 +142,7 @@ return sortedSchedule(d,scheduleSorted);
 }
 
 
-
+// GET THE ALL JSON SCHEDULE FOR WAVE IT API
 schedule = function(theUrl)
 {
     var xmlHttp = new XMLHttpRequest();
