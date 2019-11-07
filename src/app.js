@@ -66,7 +66,7 @@ app.get("/tomorrow", function(req, res) {
 app.get("/next-session", function(req, res) {
     if (req.query.class != null){
       const user_class = req.query.class;
-      res.json(getNextCourseSession(user_class, "1", "Audit"));
+      res.json(getNextCourseSession(user_class, "2", "RFID"));
     }
     else{
       const response = response_to_Alexa("no data")

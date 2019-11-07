@@ -134,7 +134,7 @@ module.exports = {
               return name.toString().includes(courseName.toString())
         })
         var groupSchedule = this.parseGroup(allCourseSlots,group)
-        return this.getFirstSlot(allCourseSlots)
+        return this.getFirstSlot(groupSchedule)
 
     },
 
