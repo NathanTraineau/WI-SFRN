@@ -10,7 +10,7 @@ const query = {
 
 module.exports = { 
     
-    addUser: function(){
+    addUser: function(req,res,next){
         const client = new Client({
             connectionString: connectionString
         });
@@ -25,17 +25,23 @@ module.exports = {
           }))
         
         .finally(() => client.end())
+    res.json({
+        message : "user created"
+    })
     },
 
-    getUsers: function(){
+    getUsers: function(req,res,next){
         const client = new Client({
             connectionString: connectionString
         });
         client.connect()
             .then(() => client.query("select * from Users"))
-            .then(results => console.table(results.rows))
+            .then(results => res.json({
+                message : "resultsss" + results
+            }))
             .catch(e => console.log(e))
             .finally(() => client.end())
+        
     }
 }
 
