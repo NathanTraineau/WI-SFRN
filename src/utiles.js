@@ -125,7 +125,7 @@ module.exports = {
         return response;
     },
 
-    getNextCourseSession: function(user_class, courseName) {
+    getNextCourseSession: function(user_class, group, courseName) {
     //INDEPENDANT OF CLASS GROUP
         const classSchedule = this.schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
         var jsonSchedule = JSON.parse(classSchedule)
@@ -133,6 +133,7 @@ module.exports = {
         var allCourseSlots = jsonSchedule.items.filter(({name}) => {
               return name.toString().includes(courseName.toString())
         })
+        var groupSchedule = this.parseGroup(allCourseSlots,group)
         return this.getFirstSlot(allCourseSlots)
 
     },

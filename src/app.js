@@ -66,7 +66,7 @@ app.get("/tomorrow", function(req, res) {
 app.get("/next-session", function(req, res) {
     if (req.query.class != null){
       const user_class = req.query.class;
-      res.json(getNextCourseSession(user_class,"Audit"));
+      res.json(getNextCourseSession(user_class, "1", "Audit"));
     }
     else{
       const response = response_to_Alexa("no data")
@@ -89,8 +89,8 @@ getTomorrowSchedule = function(user_class, group){
 }
 
 // GET THE SCHEDULE FOR TOMORROW
-getNextCourseSession = function(user_class, course){
-    return u.getNextCourseSession(user_class, course)
+getNextCourseSession = function(user_class, group, course){
+    return u.getNextCourseSession(user_class, group, course)
 }
 
 
