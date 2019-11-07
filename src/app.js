@@ -5,7 +5,6 @@ const express = require("express");
 let app = new express();
 const verifier = require('alexa-verifier-middleware');
 
-var isFisrtTime = true;
 const alexaRouter = express.Router();
 app.use('/alexa', alexaRouter);
 
@@ -22,11 +21,11 @@ alexaRouter.use(verifier);
 //And request the good url to get the course from the year
 //We should then parse the response to get what the user wants and send a proper json file in response to alexa.
 
-alexaRouter.post("/tomorrow", function(req, res) {
+alexaRouter.post("/", function(req, res) {
 
     if (req.body.request.type === 'LaunchRequest') {
       res.json(getTomorrowSchedule("STE4"));
-      isFisrtTime = false
+
     } else if (req.body.request.type === 'IntentRequest') {
       switch (req.body.request.intent.name) {
         case 'GetTomorrowSchedule':
@@ -55,25 +54,6 @@ let port = 5000;
 app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
 });
-
-
-function requestVerifier(req, res, next) {
-  alexaVerifier(
-    req.headers.signaturecertchainurl,
-    req.headers.signature,
-    req.rawBody,
-    function verificationCallback(err) {
-      if (err) {
-        res.status(401).json({
-          message: 'Verification Failure',
-          error: err
-        });
-      } else {
-        next();
-      }
-    }
-  );
-}
 
 
 getTomorrowSchedule = function(user_class,group){
@@ -180,7 +160,7 @@ schedule = function(theUrl)
       return res
   }
 
-  response_to_Alexa = function(plain_text){
+  response_to_Alexa = function(plain_text,shouldEndSession){
     const speechOutput = "<speak>" + plain_text + "</speak>"
       return {
         "version": "1.0",
@@ -189,7 +169,7 @@ schedule = function(theUrl)
             "type": "SSML",
             "ssml": speechOutput    
           },
-          "shouldEndSession": true
+          "shouldEndSession": shouldEndSession
         }
       }
   }
