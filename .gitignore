@@ -5,3 +5,4 @@ project
 target
 metastore_db/
 .DS_Store
+node_modules
