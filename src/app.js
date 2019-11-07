@@ -52,26 +52,8 @@ alexaRouter.post("/", function(req, res) {
 // POUR LES TESTS PCQ SINON PLANTE VU QUE C'EST PAS ALEXA QUI RENVOIE LA REQUETE
 // --------------------------- LOCAL ----------------------------------
 app.get("/tomorrow", function(req, res) {
-  const query = {
-    text: 'INSERT INTO Users(user_id,class,group) VALUES($1, $2, $3)',
-    values: ['2', 'fef','fsfqgr'],
-  }
-  // callback
-  client.query(query, (err, res) => {
-    if (err) {
-      console.log(err.stack)
-    } else {
-      console.log(res.rows[0])
-    }
-  })
-  // promise
-  client
-    .query(query)
-    .then(res => console.log(res.rows[0]))
-    .catch(e => console.error(e.stack))
     if (req.query.class != null){
       const user_class = req.query.class;
-      
       res.json(getTomorrowSchedule(user_class,"1"));
     }
     else{
@@ -93,6 +75,13 @@ app.get("/next-session", function(req, res) {
 });
 
 // -------------------------------------------------------------
+
+
+
+app.get('/create', client.addUser);
+app.get('/get', client.getUsers);
+app.put('/update/:id', client.addUser);
+
 
 let port = 5000;
 app.listen(port, function() {
