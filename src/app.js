@@ -61,6 +61,19 @@ app.get("/tomorrow", function(req, res) {
       res.json(response);
   }
 });
+
+
+app.get("/next-session", function(req, res) {
+    if (req.query.class != null){
+      const user_class = req.query.class;
+      res.json(getNextCourseSession(user_class,"DI"));
+    }
+    else{
+      const response = response_to_Alexa("no data")
+      res.json(response);
+  }
+});
+
 // -------------------------------------------------------------
 
 let port = 5000;
@@ -71,9 +84,14 @@ app.listen(port, function() {
 
 
 // GET THE SCHEDULE FOR TOMORROW
-getTomorrowSchedule = function(user_class,group){
+getTomorrowSchedule = function(user_class, group){
     return u.getDaySchedule(user_class,group,1);
-} 
+}
+
+// GET THE SCHEDULE FOR TOMORROW
+getNextCourseSession = function(user_class, course){
+    return u.getNextCourseSession(user_class, course)
+}
 
 
 plain_text_array = function(parsed){
