@@ -45,10 +45,14 @@ module.exports = {
         var now = new Date();
         var minDay = 31;
         var minMonth = 11;
-        var minYear = now.getYear() + 1
+        var minYear = now.getYear() + 1971
         var minTime = 100
 
         var nextCourse;
+
+        scheduleToSort = scheduleToSort.filter( course => {
+            return this.getSlotDate(course) > now
+        })
 
         scheduleToSort.filter( function(course) {
             var day = course.date
@@ -58,29 +62,45 @@ module.exports = {
             var hour = splited[0]
             var minute = splited[1]
 
-            if(parseInt(year) < minYear || parseInt(month) < minMonth || parseInt(day) < minDay || parseInt(hour) < minTime){
+            if(parseInt(year) <= minYear){
+                if (parseInt(month) < minMonth) {
+                    minDay = day;
+                    minMonth = month;
+                    minYear = year
+                    minTime = hour
 
-              minDay = day;
-              minMonth = month;
-              minYear = year
-              minTime = hour
+                    nextCourse = course
+                } else if (parseInt(month) == minMonth) {
+                    if (parseInt(day) < minDay) {
+                        minDay = day;
+                        minMonth = month;
+                        minYear = year
+                        minTime = hour
 
-              nextCourse = course
+                        nextCourse = course
+                    } else if (parseInt(day) == minDay) {
+                        if (parseInt(hour) < minTime) {
+                            minDay = day;
+                            minMonth = month;
+                            minYear = year
+                            minTime = hour
+
+                            nextCourse = course
+                        }
+                    }
+
+                }
             }
         })
 
         var d = scheduleToSort.filter(course => {
-            return course.date != nextCourse.day && course.month != nextCourse.month && course.year != nextCourse.year && course.start_time != nextCourse.start_time && course.location != nextCourse.location
+
+            return course != nextCourse;
         })
 
         scheduleSorted['courses'].push(nextCourse)
         return this.sortedSlotsFromYear(d,scheduleSorted);
      },
-
-
-
-
-
 
 
     // GET THE SCHEDULE FOR THE DAY X
@@ -117,9 +137,9 @@ module.exports = {
 
     },
 
-    getFirstSlot(schedule) {
-        return this.sortedSlotsFromYear(schedule)
 
+    getFirstSlot(schedule) {
+        return this.sortedSlotsFromYear(schedule)['courses'][0]
     },
 
 
