@@ -4,13 +4,13 @@
 // ----------------------- CONST ---------------------------
 // ---------------------------------------------------------
 
-var assert = require('assert');
 const express = require("express");
 let app = new express();
 const verifier = require('alexa-verifier-middleware');
 const alexaRouter = express.Router();
 
 var u = require('./utiles');
+var client = require('./database_connection');
 
 
 // ---------------------------------------------------------
@@ -52,8 +52,26 @@ alexaRouter.post("/", function(req, res) {
 // POUR LES TESTS PCQ SINON PLANTE VU QUE C'EST PAS ALEXA QUI RENVOIE LA REQUETE
 // --------------------------- LOCAL ----------------------------------
 app.get("/tomorrow", function(req, res) {
+  const query = {
+    text: 'INSERT INTO Users(user_id,class,group) VALUES($1, $2, $3)',
+    values: ['2', 'fef','fsfqgr'],
+  }
+  // callback
+  client.query(query, (err, res) => {
+    if (err) {
+      console.log(err.stack)
+    } else {
+      console.log(res.rows[0])
+    }
+  })
+  // promise
+  client
+    .query(query)
+    .then(res => console.log(res.rows[0]))
+    .catch(e => console.error(e.stack))
     if (req.query.class != null){
       const user_class = req.query.class;
+      
       res.json(getTomorrowSchedule(user_class,"1"));
     }
     else{
@@ -78,7 +96,6 @@ getTomorrowSchedule = function(user_class,group){
 
 plain_text_array = function(parsed){
   //This function take a json text as parameter and the info the user should get on the courses
-  console.log("jfkmdfjmsqdfjmqsdl" + parsed.type)
   const res = parsed.courses.map( function(course) {
       let info = "You have " + course.name + " from " + course.start_time + " to " + course.end_time + " at the location " + course.location;
       return info;

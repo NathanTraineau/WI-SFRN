@@ -13,6 +13,8 @@
     "alexa-verifier-middleware": "^1.0.2",
     "express": "^4.17.1",
     "heroku": "^7.33.3",
+    "pg": "^7.12.1",
+    "sequelize": "^5.21.2",
     "xmlhttprequest": "^1.8.0"
   }
 }
