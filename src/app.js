@@ -41,16 +41,13 @@ alexaRouter.post("/", function(req, res) {
             case 'GetTomorrowSchedule':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
-                console.log(classVal)
-                res.json(getTomorrowSchedule("IG5","1")); // TODO find group
+                res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
             break;
             case 'GetNextSession':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 var course = req.body.request.intent.slots.course.value
-                console.log(classVal)
-                console.log(course)
-                res.json(getNextCourseSession("IG5","1", "Audit")); // TODO find group and course
+                res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
             case 'registerUserInfo':
                 res.json(registerUser(req,res))
