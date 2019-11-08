@@ -34,10 +34,16 @@ module.exports = {
 
 
   userExists: function(user_id){
-    pool.query((`SELECT * FROM "Users" WHERE "user_id" = "${user_id}"`),(err, results) => {
+    const query = {
+      text: 'SELECT * FROM "Users" where user_id = $1 ',
+      values: [2],
+    }
+    pool.query(query,(err, results) => {
       if (err) throw err
       //res.write('<li>'+result.rows[0]+'</li>');
-      return results.rowCount != 0
+      console.log(results.rows)
+      console.log(results.rowsCount != 0)
+      return results.rowsCount != 0
     })
   }
 }

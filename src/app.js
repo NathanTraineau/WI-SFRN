@@ -106,8 +106,8 @@ app.get('/yoyo', function(req,res){
 });
 
 app.get('/yo', function(req,res){
-  const resp = client.userExists(2)
-  if(resp){
+  const resp = client.userExists("2")
+  if(client.userExists("2") == true){
     res.json("true")
   }else{
     res.json("false");
