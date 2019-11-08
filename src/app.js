@@ -39,12 +39,12 @@ alexaRouter.post("/", function(req, res) {
     } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
         switch (req.body.request.intent.name) {
             case 'GetTomorrowScheduleFrench':
-                var value = req.body.request.intent.slots.class.value
+                var value = req.body.request.intent.slots.userClass.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
             break;
             case 'GetNextSessionFrench':
-                var value = req.body.request.intent.slots.class.value
+                var value = req.body.request.intent.slots.userClass.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 var course = req.body.request.intent.slots.course.value
                 res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
