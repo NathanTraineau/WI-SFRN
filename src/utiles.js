@@ -185,6 +185,24 @@ module.exports = {
     },
 
 
+    // SCHEDULE OF THE D DAY
+    isUserInfoRight: function(user_class, user_group) {
+        //This function check whether the given class and group 
+        //are real values or they have been misspelled
+        //It return true if the given data are right, false if not.
+        const classSchedule = this.schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
+        if(classSchedule.length === 0){
+            return false
+        }
+        var s = JSON.parse(classSchedule)
+        return s.items.filter(({
+              grp
+            }) => {
+              return grp === user_group.toString() 
+            }).length != 0
+    },
+
+
     // NOT USE FOR THE MOMENT
     getSlotDate: function(slot) {
           var day = slot.date;

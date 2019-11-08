@@ -14,13 +14,12 @@ const pool = new Pool({
 
 module.exports = { 
     
-  addUser: function(req,res,next){
+  addUser: function(classe,group,user_id){
     console.log(req.query.user_id)
-    pool.query('insert into "Users" ("user_id","class","group") values ($1, $2, $3)',[req.query.class, req.query.group,req.query.user_id],(error,results) => {
+    pool.query('insert into "Users" values ($1, $2, $3)',[classe, group,user_id],(error,results) => {
       if (error) {
         throw error
       }
-      results => console.table(results.rows),
       res.status(200).send(`User added with ID: ${results.user_id}`)
     })
   },

@@ -40,14 +40,16 @@ alexaRouter.post("/", function(req, res) {
         switch (req.body.request.intent.name) {
             case 'GetTomorrowSchedule':
                 var value = req.body.request.intent.slots.class.value
-                var class = value.replace(/\s/g, '').toUpperCase()
-                res.json(getTomorrowSchedule(class,"1")); // TODO find group
+                var classe = value.replace(/\s/g, '').toUpperCase()
+                res.json(getTomorrowSchedule(classe,"1")); // TODO find group
             break;
             case 'GetNextSession':
                 var value = req.body.request.intent.slots.class.value
-                var class = value.replace(/\s/g, '').toUpperCase()
-                res.json(getNextCourseSession(class,"1", "Audit")); // TODO find group and course
+                var classe = value.replace(/\s/g, '').toUpperCase()
+                res.json(getNextCourseSession(classe,"1", "Audit")); // TODO find group and course
             break;
+            case 'registerUserInfo':
+                res.json(registerUser(req,res))
             default:
                 const response = response_to_Alexa("no data")
                 res.json(response)
@@ -88,6 +90,17 @@ app.get("/next-session", function(req, res) {
 app.get('/create', client.addUser);
 app.get('/get', client.getUsers);
 app.put('/update/:id', client.addUser);
+
+app.get('/yoyo', function(req,res){
+  const resp = u.isUserInfoRight("IG7","2")
+  if(resp){
+    res.json("true")
+  }else{
+    res.json("false");
+  }
+  
+});
+  
 
 
 let port = 5000;
