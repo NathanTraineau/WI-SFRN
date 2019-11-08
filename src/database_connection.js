@@ -1,7 +1,50 @@
 
-const { Client } = require('pg');
-const connectionString = 'postgres://postgres:91bbd0e19ecf58b2b2f43d6c2d14fb26@dokku-postgres-wi-sfrn-db:5432/wi_sfrn_db';
+const Pool = require('pg').Pool;
+const connectiontring = 'postgres://postgres:91bbd0e19ecf58b2b2f43d6c2d14fb26@dokku-postgres-wi-sfrn-db:5432/wi_sfrn_db';
+var connectionString = "postgres://postgres:postgres@localhost:5432/wave it skill";
 
+
+const pool = new Pool({
+  user: "postgres",
+  password: "postgres",
+  host: "localhost",
+  port: 5432,
+  database: "wi_sfrn_db"
+})
+
+module.exports = { 
+    
+  addUser: function(req,res,next){
+    console.log(req.query.user_id)
+    pool.query('insert into "Users" ("user_id","class","group") values ($1, $2, $3)',[req.query.class, req.query.group,req.query.user_id],(error,results) => {
+      if (error) {
+        throw error
+      }
+      results => console.table(results.rows),
+      res.status(200).send(`User added with ID: ${results.user_id}`)
+    })
+  },
+
+  getUsers: function(req,res,next){
+    pool.query(('SELECT * FROM "Users"'),(err, results) => {
+      if (err) throw err
+      //res.write('<li>'+result.rows[0]+'</li>');
+      res.status(200).json(results.rows)
+    })
+  }
+}
+
+
+/*
+const db = require('knex')({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'postgres',
+      database : 'wave_it_skill'
+    }
+  });
 
 const query = {
     text: 'INSERT INTO Users(user_id,class,group) VALUES($1, $2, $3)',
@@ -11,38 +54,14 @@ const query = {
 module.exports = { 
     
     addUser: function(req,res,next){
-        const client = new Client({
-            connectionString: connectionString
-        });
-        client.connect()
-        .then(() => console.log("Connected successfuly"))
-        .then(() => client.query(query, (err, res) => {
-            if (err) {
-              console.log(err.stack)
-            } else {
-              console.log(res.rows[0])
-            }
-          }))
-        
-        .finally(() => client.end())
-    res.json({
-        message : "user created"
-    })
+        const re = db('Users').insert({user_id: "freg"}, {class: "fsjfsj"}, {group: "fsljfl"})
+        res.json(re)
     },
 
     getUsers: function(req,res,next){
-        const client = new Client({
-            connectionString: connectionString
-        });
-        client.connect()
-            .then(() => client.query("select * from Users"))
-            .then(results => res.json({
-                message : "resultsss" + results
-            }))
-            .catch(e => console.log(e))
-            .finally(() => client.end())
-        
+        const re = db.select('*').from('Users')
+        res.json(re)
     }
-}
+}*/
 
       
