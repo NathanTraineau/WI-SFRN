@@ -37,14 +37,21 @@ alexaRouter.post("/", function(req, res) {
     if (req.body.request.type === 'LaunchRequest') {
       res.json(getTomorrowSchedule("STE4"));
     } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
-      switch (req.body.request.intent.name) {
-        case 'GetTomorrowSchedule':
-            res.json(getTomorrowSchedule("IG5","1"));
-          break;
-        default:
-            const response = response_to_Alexa("no data")
-            res.json(response)
-      }
+        switch (req.body.request.intent.name) {
+            case 'GetTomorrowSchedule':
+                var value = req.body.request.intent.slots.class.value
+                var class = value.replace(/\s/g, '').toUpperCase()
+                res.json(getTomorrowSchedule(class,"1")); // TODO find group
+            break;
+            case 'GetNextSession':
+                var value = req.body.request.intent.slots.class.value
+                var class = value.replace(/\s/g, '').toUpperCase()
+                res.json(getNextCourseSession(class,"1", "Audit")); // TODO find group and course
+            break;
+            default:
+                const response = response_to_Alexa("no data")
+                res.json(response)
+            }
     }
 });
 
@@ -66,7 +73,7 @@ app.get("/tomorrow", function(req, res) {
 app.get("/next-session", function(req, res) {
     if (req.query.class != null){
       const user_class = req.query.class;
-      res.json(getNextCourseSession(user_class, "2", "RFID"));
+      res.json(getNextCourseSession(user_class, "1", "Audit"));
     }
     else{
       const response = response_to_Alexa("no data")
