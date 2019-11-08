@@ -103,7 +103,7 @@ app.get('/yoyo', function(req,res){
 });
 
 app.get('/yo', function(req,res){
-   var test = client.userExists(2)
+   var test = client.userExist(8)
    test.then(function(result){
      res.json(result)
    })

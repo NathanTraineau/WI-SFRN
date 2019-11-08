@@ -32,30 +32,28 @@ module.exports = {
     })
   },
 
-
-  userExists: function(user_id){
+  userExist: (user_id) => new Promise(function(resolve,reject){
       const query = {
         text: 'SELECT * FROM "Users" where user_id = $1 ',
         values: [user_id],
       }
-      return new Promise(function(resolve,reject){
-        pool.query(query,(err, results) => {
-        if (err) throw err
-        //res.write('<li>'+result.rows[0]+'</li>');
-        console.log(results.rows)
-        results.rows.length != 0
-        console.log(results.rows.length != 0)
-        if (err) {
-          reject(err);
-      } else {
-          resolve(results.rows.length != 0);
-      } 
-      })
+      pool.query(query,(err, results) => {
+      if (err) throw err
+      //res.write('<li>'+result.rows[0]+'</li>');
+      console.log(results.rows)
+      results.rows.length != 0
+      console.log(results.rows.length != 0)
+      if (err) {
+        reject(err);
+    } else {
+        resolve(results.rows.length != 0);
+    } 
     })
-  }
-
-
+  })
 }
+
+
+
 
 
 /*
