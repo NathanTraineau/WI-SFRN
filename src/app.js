@@ -8,9 +8,8 @@ const express = require("express");
 let app = new express();
 const verifier = require('alexa-verifier-middleware');
 const alexaRouter = express.Router();
-
 var u = require('./utiles');
-var client = require('./database_connection');
+var user_controller = require('./user_controller');
 
 
 // ---------------------------------------------------------
@@ -33,14 +32,28 @@ alexaRouter.use(verifier);
 
 alexaRouter.post("/", function(req, res) {
 
+
+    
     //ACTION PAR DEFAULT AU LANCEMENT
     if (req.body.request.type === 'LaunchRequest') {
       res.json(getTomorrowSchedule("STE4"));
     } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
         switch (req.body.request.intent.name) {
             case 'GetTomorrowScheduleFrench':
-                var value = req.body.request.intent.slots.userClass.value
-                var classVal = value.replace(/\s/g, '').toUpperCase()
+                var user_class = req.body.request.intent.slots.userClass.value
+                var user_group = req.body.request.intent.slots.userGroup.value
+                if(user_class == null){
+                  //If the user didn't give any information on his class
+                  //We have to search what class he is in
+                  const user_auth = isUserAuth(req,res)
+                  if(user_auth){
+                    user_class = user_auth.class
+                    user_group = user_auth.group
+                  }else{
+                    res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe dans votre requête"))
+                  }   
+                }
+                var classVal = user_class.replace(/\s/g, '').toUpperCase()
                 res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
             break;
             case 'GetNextSessionFrench':
@@ -50,7 +63,12 @@ alexaRouter.post("/", function(req, res) {
                 res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
             case 'registerUserInfoFrench':
-                res.json(registerUser(req,res))
+                if(res.json(registerUser(req,res))){
+                  res.json(response_to_Alexa("Vous avez été enregistré"))
+                }
+                else{
+                  res.json(response_to_Alexa("Vous avez rentré des informartions non valables"))
+                }
             default:
                 const response = response_to_Alexa("no data")
                 res.json(response)
@@ -61,16 +79,36 @@ alexaRouter.post("/", function(req, res) {
 
 // POUR LES TESTS PCQ SINON PLANTE VU QUE C'EST PAS ALEXA QUI RENVOIE LA REQUETE
 // --------------------------- LOCAL ----------------------------------
-app.get("/tomorrow", function(req, res) {
-    if (req.query.class != null){
-      const user_class = req.query.class;
-      res.json(getTomorrowSchedule(user_class,"1"));
+app.get("/tomorrow", isUserAuth )
+
+async function isUserAuth(req,res) {
+    try {
+  const user_class = req.query.class;
+  if(user_class == null){
+    //If the user didn't give any information on his class
+    //We have to search what class he is in
+    const userId = req.query.userId
+    const result = await user_controller.c_getUserById(userId)
+      if(!result){
+        return null
+      }
+      else{
+        return result
+      }
     }
-    else{
-      const response = response_to_Alexa("no data")
-      res.json(response);
   }
-});
+  catch(error) {
+    console.error("ERROR:" + error);
+}
+}
+app.get("/create",function(req,res){
+  if(res.json(registerUser(req,res))){
+    res.json(response_to_Alexa("Vous avez été enregistré"))
+  }
+  else{
+    res.json(response_to_Alexa("Vous avez rentré des informartions non valables"))
+  }
+})
 
 
 app.get("/next-session", function(req, res) {
@@ -87,11 +125,6 @@ app.get("/next-session", function(req, res) {
 // -------------------------------------------------------------
 
 
-
-app.get('/create', client.addUser);
-app.get('/get', client.getUsers);
-app.put('/update/:id', client.addUser);
-
 app.get('/yoyo', function(req,res){
   const resp = u.isUserInfoRight("IG3","T")
   if(resp){
@@ -99,14 +132,6 @@ app.get('/yoyo', function(req,res){
   }else{
     res.json("false");
   }
-  
-});
-
-app.get('/yo', function(req,res){
-   var test = client.userExist(8)
-   test.then(function(result){
-     res.json(result)
-   })
 });
   
 
@@ -115,6 +140,16 @@ app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
 });
 
+
+function registerUser(req,res){
+  var value_user_id = req.body.request.intent.slots.user_id.value
+  var user_id = value_user_id.replace(/\s/g, '').toUpperCase()
+  var value_class = req.body.request.intent.slots.class.value
+  var user_class = value_class.replace(/\s/g, '').toUpperCase()
+  var value_group = req.body.request.intent.slots.group.value
+  var user_group = value_group.replace(/\s/g, '').toUpperCase()
+  return user_controller.addUser(user_id,user_class,user_group)
+}
 
 // GET THE SCHEDULE FOR TOMORROW
 getTomorrowSchedule = function(user_class, group){
