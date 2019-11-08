@@ -40,13 +40,14 @@ alexaRouter.post("/", function(req, res) {
         switch (req.body.request.intent.name) {
             case 'GetTomorrowSchedule':
                 var value = req.body.request.intent.slots.class.value
-                var classe = value.replace(/\s/g, '').toUpperCase()
-                res.json(getTomorrowSchedule(classe,"1")); // TODO find group
+                var classVal = value.replace(/\s/g, '').toUpperCase()
+                res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
             break;
             case 'GetNextSession':
                 var value = req.body.request.intent.slots.class.value
-                var classe = value.replace(/\s/g, '').toUpperCase()
-                res.json(getNextCourseSession(classe,"1", "Audit")); // TODO find group and course
+                var classVal = value.replace(/\s/g, '').toUpperCase()
+                var course = req.body.request.intent.slots.course.value
+                res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
             case 'registerUserInfo':
                 res.json(registerUser(req,res))
@@ -121,12 +122,24 @@ getNextCourseSession = function(user_class, group, course){
 }
 
 
-plain_text_array = function(parsed){
-  //This function take a json text as parameter and the info the user should get on the courses
-  const res = parsed.courses.map( function(course) {
-      let info = "You have " + course.name + " from " + course.start_time + " to " + course.end_time + " at the location " + course.location;
-      return info;
-  })
+plain_text_array = function(parsed, action){
+console.log(parsed)
+    //This function take a json text as parameter and the info the user should get on the courses
+    var res = ""
+    switch (action) {
+        case 'tomorrow':
+            res = parsed.courses.map( function(course) {
+                let info = "Demain, vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location;
+                return info;
+            })
+        case 'next':
+            const monthslist = [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ];
+
+            res = parsed.courses.map( function(course) {
+                let info = "Votre prochain cours de " + course.name + " aura lieu le " + course.date + " " + monthslist[course.month -1] + " de " + course.start_time + " à " + course.end_time +  " en salle " + course.location;
+                return info;
+            })
+  }
   return res
 }
 

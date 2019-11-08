@@ -118,12 +118,14 @@ module.exports = {
         //We sort the course so we have them in the time order
         const tomorrowScheduleSorted = this.sortedSlotsFromDay(tomorrowScheduleParsedGroup)
         //We build the sentences to give to alexa per course
-        const tomorrowScheduleToArray = plain_text_array(tomorrowScheduleSorted)
+        const tomorrowScheduleToArray = plain_text_array(tomorrowScheduleSorted, "tomorrow")
         //We join it in one string
         const tomorrowScheduleToPlainText = tomorrowScheduleToArray.join(" ")
         const response = response_to_Alexa(tomorrowScheduleToPlainText)
         return response;
     },
+
+
 
     getNextCourseSession: function(user_class, group, courseName) {
     //INDEPENDANT OF CLASS GROUP
@@ -134,13 +136,22 @@ module.exports = {
               return name.toString().includes(courseName.toString())
         })
         var groupSchedule = this.parseGroup(allCourseSlots,group)
-        return this.getFirstSlot(groupSchedule)
+        var nextCourseSlot = this.getFirstSlot(groupSchedule)
 
+
+        //We build the sentences to give to alexa per course
+        const NextCourseScheduleToArray = plain_text_array(nextCourseSlot, "next")
+        //We join it in one string
+        const NextCourseScheduleToPlainText = NextCourseScheduleToArray.join(" ")
+        const response = response_to_Alexa(NextCourseScheduleToPlainText)
+        return response;
     },
 
 
     getFirstSlot(schedule) {
-        return this.sortedSlotsFromYear(schedule)['courses'][0]
+        var res = this.sortedSlotsFromYear(schedule)
+        res['courses'] = [this.sortedSlotsFromYear(schedule)['courses'][0]]
+        return res
     },
 
 
