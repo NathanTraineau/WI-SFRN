@@ -93,7 +93,7 @@ app.get('/get', client.getUsers);
 app.put('/update/:id', client.addUser);
 
 app.get('/yoyo', function(req,res){
-  const resp = u.isUserInfoRight("IG5","2")
+  const resp = u.isUserInfoRight("IG3","T")
   if(resp){
     res.json("true")
   }else{
@@ -103,12 +103,10 @@ app.get('/yoyo', function(req,res){
 });
 
 app.get('/yo', function(req,res){
-  const resp = client.userExists("2")
-  if(client.userExists("2") == true){
-    res.json("true")
-  }else{
-    res.json("false");
-  }
+   var test = client.userExists(2)
+   test.then(function(result){
+     res.json(result)
+   })
 });
   
 
@@ -117,7 +115,6 @@ let port = 5000;
 app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
 });
-
 
 
 // GET THE SCHEDULE FOR TOMORROW
