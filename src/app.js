@@ -93,13 +93,22 @@ app.get('/get', client.getUsers);
 app.put('/update/:id', client.addUser);
 
 app.get('/yoyo', function(req,res){
-  const resp = u.isUserInfoRight("IG7","2")
+  const resp = u.isUserInfoRight("IG5","2")
   if(resp){
     res.json("true")
   }else{
     res.json("false");
   }
   
+});
+
+app.get('/yo', function(req,res){
+  const resp = client.userExists(2)
+  if(resp){
+    res.json("true")
+  }else{
+    res.json("false");
+  }
 });
   
 
@@ -143,7 +152,7 @@ console.log(parsed)
   return res
 }
 
-response_to_Alexa = function(plain_text){
+response_to_Alexa = function(plain_text,shouldEndSession){
 const speechOutput = "<speak>" + plain_text + "</speak>"
   return {
     "version": "1.0",
@@ -152,7 +161,7 @@ const speechOutput = "<speak>" + plain_text + "</speak>"
         "type": "SSML",
         "ssml": speechOutput
       },
-      "shouldEndSession": true
+      "shouldEndSession": shouldEndSession
     }
   }
 }

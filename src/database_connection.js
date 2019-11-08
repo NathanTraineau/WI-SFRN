@@ -30,6 +30,15 @@ module.exports = {
       //res.write('<li>'+result.rows[0]+'</li>');
       res.status(200).json(results.rows)
     })
+  },
+
+
+  userExists: function(user_id){
+    pool.query((`SELECT * FROM "Users" WHERE "user_id" = "${user_id}"`),(err, results) => {
+      if (err) throw err
+      //res.write('<li>'+result.rows[0]+'</li>');
+      return results.rowCount != 0
+    })
   }
 }
 

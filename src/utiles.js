@@ -111,7 +111,7 @@ module.exports = {
         var tomorrow = new Date();
         tomorrow.setDate(d.getDate() + numberOfDayFromToday);
         tomorrow.setMonth(d.getMonth() + numberOfDayFromToday);
-        const sched = this.schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
+        const sched = this.schedule(user_class);
         const tomorrowSchedule = this.scheduleOftheDay(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
         //We get the courses of the group of our user
         const tomorrowScheduleParsedGroup = this.parseGroup(tomorrowSchedule,group)
@@ -129,7 +129,7 @@ module.exports = {
 
     getNextCourseSession: function(user_class, group, courseName) {
     //INDEPENDANT OF CLASS GROUP
-        const classSchedule = this.schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
+        const classSchedule = this.schedule(user_class);
         var jsonSchedule = JSON.parse(classSchedule)
         //All scheduled Course
         var allCourseSlots = jsonSchedule.items.filter(({name}) => {
@@ -171,10 +171,14 @@ module.exports = {
     },
 
     // GET THE ALL JSON SCHEDULE FOR WAVE IT API
-    schedule: function(theUrl) {
+    schedule: function(user_class) {
         var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous requests
+        xmlHttp.open( "GET", `https://wave-it.fr/application/cache/json/${user_class}.json`, false ); // false for synchronous requests
         xmlHttp.send( null );
+        if(xmlHttp.status == 404){
+            return null
+        }
+        console.log("fvdgre"+xmlHttp.status)
         return xmlHttp.responseText;
     },
 
@@ -201,16 +205,18 @@ module.exports = {
         //This function check whether the given class and group 
         //are real values or they have been misspelled
         //It return true if the given data are right, false if not.
-        const classSchedule = this.schedule(`https://wave-it.fr/application/cache/json/${user_class}.json`);
-        if(classSchedule.length === 0){
+        const classSchedule = this.schedule(user_class);
+        if(classSchedule === null){
             return false
+        }else{
+            var s = JSON.parse(classSchedule)
+            return s.items.filter(({
+                  grp
+                }) => {
+                  return grp === user_group.toString() 
+                }).length != 0
         }
-        var s = JSON.parse(classSchedule)
-        return s.items.filter(({
-              grp
-            }) => {
-              return grp === user_group.toString() 
-            }).length != 0
+        
     },
 
 
