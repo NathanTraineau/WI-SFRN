@@ -178,7 +178,6 @@ module.exports = {
         if(xmlHttp.status == 404){
             return null
         }
-        console.log("fvdgre"+xmlHttp.status)
         return xmlHttp.responseText;
     },
 

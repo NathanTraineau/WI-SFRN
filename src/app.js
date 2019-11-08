@@ -132,22 +132,30 @@ getNextCourseSession = function(user_class, group, course){
 
 
 plain_text_array = function(parsed, action){
-console.log(parsed)
     //This function take a json text as parameter and the info the user should get on the courses
     var res = ""
     switch (action) {
         case 'tomorrow':
-            res = parsed.courses.map( function(course) {
-                let info = "Demain, vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location;
-                return info;
-            })
+            if (parsed.courses.length == 0) {
+                res = ["Vous n'avez pas de cours demain"];
+            } else {
+                res = parsed.courses.map( function(course) {
+                    let info = "Demain, vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location;
+                    return info;
+                })
+            }
+        break;
         case 'next':
             const monthslist = [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ];
-
-            res = parsed.courses.map( function(course) {
-                let info = "Votre prochain cours de " + course.name + " aura lieu le " + course.date + " " + monthslist[course.month -1] + " de " + course.start_time + " à " + course.end_time +  " en salle " + course.location;
-                return info;
-            })
+            if (parsed.courses.length == 0) {
+                res = ["Ce cours n'est pas encore programmé"];
+            } else {
+                res = parsed.courses.map( function(course) {
+                    let info = "Votre prochain cours de " + course.name + " aura lieu le " + course.date + " " + monthslist[course.month -1] + " de " + course.start_time + " à " + course.end_time +  " en salle " + course.location;
+                    return info;
+                })
+            }
+        break;
   }
   return res
 }
