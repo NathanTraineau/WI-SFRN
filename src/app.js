@@ -38,18 +38,18 @@ alexaRouter.post("/", function(req, res) {
       res.json(getTomorrowSchedule("STE4"));
     } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
         switch (req.body.request.intent.name) {
-            case 'GetTomorrowSchedule':
+            case 'GetTomorrowScheduleFrench':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
             break;
-            case 'GetNextSession':
+            case 'GetNextSessionFrench':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 var course = req.body.request.intent.slots.course.value
                 res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
-            case 'registerUserInfo':
+            case 'registerUserInfoFrench':
                 res.json(registerUser(req,res))
             default:
                 const response = response_to_Alexa("no data")
