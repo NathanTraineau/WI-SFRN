@@ -46,7 +46,7 @@ module.exports = {
       if (err) {
         reject(err);
     } else {
-        resolve(results.rows.length != 0);
+        resolve(results.rows);
     } 
     })
   })

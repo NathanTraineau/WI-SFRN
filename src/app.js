@@ -46,7 +46,7 @@ alexaRouter.post("/", function(req, res) {
             case 'GetNextSessionFrench':
                 var value = req.body.request.intent.slots.userClass.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
-                var course = req.body.request.intent.slots.course.value
+                var course = req.body.request.intent.slots.userCourse.value
                 res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
             case 'registerUserInfoFrench':
@@ -110,7 +110,6 @@ app.get('/yo', function(req,res){
 });
   
 
-
 let port = 5000;
 app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
@@ -157,7 +156,7 @@ plain_text_array = function(parsed, action){
   return res
 }
 
-response_to_Alexa = function(plain_text,shouldEndSession = false){
+response_to_Alexa = function(plain_text,shouldEndSession = true){
 const speechOutput = "<speak>" + plain_text + "</speak>"
   return {
     "version": "1.0",
