@@ -41,16 +41,13 @@ alexaRouter.post("/", function(req, res) {
             case 'GetTomorrowSchedule':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
-                console.log(classVal)
-                res.json(getTomorrowSchedule("IG5","1")); // TODO find group
+                res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
             break;
             case 'GetNextSession':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 var course = req.body.request.intent.slots.course.value
-                console.log(classVal)
-                console.log(course)
-                res.json(getNextCourseSession("IG5","1", "Audit")); // TODO find group and course
+                res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
             case 'registerUserInfo':
                 res.json(registerUser(req,res))
@@ -135,27 +132,35 @@ getNextCourseSession = function(user_class, group, course){
 
 
 plain_text_array = function(parsed, action){
-console.log(parsed)
     //This function take a json text as parameter and the info the user should get on the courses
     var res = ""
     switch (action) {
         case 'tomorrow':
-            res = parsed.courses.map( function(course) {
-                let info = "Demain, vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location;
-                return info;
-            })
+            if (parsed.courses.length == 0) {
+                res = ["Vous n'avez pas de cours demain"];
+            } else {
+                res = parsed.courses.map( function(course) {
+                    let info = "Demain, vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location;
+                    return info;
+                })
+            }
+        break;
         case 'next':
             const monthslist = [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ];
-
-            res = parsed.courses.map( function(course) {
-                let info = "Votre prochain cours de " + course.name + " aura lieu le " + course.date + " " + monthslist[course.month -1] + " de " + course.start_time + " à " + course.end_time +  " en salle " + course.location;
-                return info;
-            })
+            if (parsed.courses.length == 0) {
+                res = ["Ce cours n'est pas encore programmé"];
+            } else {
+                res = parsed.courses.map( function(course) {
+                    let info = "Votre prochain cours de " + course.name + " aura lieu le " + course.date + " " + monthslist[course.month -1] + " de " + course.start_time + " à " + course.end_time +  " en salle " + course.location;
+                    return info;
+                })
+            }
+        break;
   }
   return res
 }
 
-response_to_Alexa = function(plain_text,shouldEndSession){
+response_to_Alexa = function(plain_text,shouldEndSession = false){
 const speechOutput = "<speak>" + plain_text + "</speak>"
   return {
     "version": "1.0",
