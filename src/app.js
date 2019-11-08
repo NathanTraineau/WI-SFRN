@@ -160,7 +160,7 @@ plain_text_array = function(parsed, action){
   return res
 }
 
-response_to_Alexa = function(plain_text,shouldEndSession){
+response_to_Alexa = function(plain_text,shouldEndSession = false){
 const speechOutput = "<speak>" + plain_text + "</speak>"
   return {
     "version": "1.0",
