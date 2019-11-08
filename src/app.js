@@ -46,7 +46,8 @@ alexaRouter.post("/", function(req, res) {
             case 'GetNextSession':
                 var value = req.body.request.intent.slots.class.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
-                res.json(getNextCourseSession(classVal,"1", "Audit")); // TODO find group and course
+                var course = req.body.request.intent.slots.course.value
+                res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
             break;
             default:
                 const response = response_to_Alexa("no data")
