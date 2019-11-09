@@ -60,7 +60,8 @@ alexaRouter.post("/", function(req, res) {
                 var value = req.body.request.intent.slots.userClass.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 var course = req.body.request.intent.slots.userCourse.value
-                res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
+                var courseVal = course.charAt(0).toUpperCase() + s.slice(1) // First letter in Upper Case
+                res.json(getNextCourseSession(classVal,"1", courseVal)); // TODO find group and course
             break;
             case 'registerUserInfoFrench':
                 if(res.json(registerUser(req,res))){
@@ -167,7 +168,7 @@ plain_text_array = function(parsed, action){
     var res = ""
     switch (action) {
         case 'tomorrow':
-            if (parsed.courses.length == 0) {
+            if (parsed.courses.length == 0 || typeof parsed.courses[0] == 'undefined') {
                 res = ["Vous n'avez pas de cours demain"];
             } else {
                 res = parsed.courses.map( function(course) {
@@ -178,7 +179,7 @@ plain_text_array = function(parsed, action){
         break;
         case 'next':
             const monthslist = [ "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" ];
-            if (parsed.courses.length == 0) {
+            if (parsed.courses.length == 0 || typeof parsed.courses[0] == 'undefined') {
                 res = ["Ce cours n'est pas encore programmé"];
             } else {
                 res = parsed.courses.map( function(course) {

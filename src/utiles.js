@@ -128,12 +128,11 @@ module.exports = {
 
 
     getNextCourseSession: function(user_class, group, courseName) {
-    //INDEPENDANT OF CLASS GROUP
         const classSchedule = this.schedule(user_class);
         var jsonSchedule = JSON.parse(classSchedule)
         //All scheduled Course
         var allCourseSlots = jsonSchedule.items.filter(({name}) => {
-              return name.toString().includes(courseName.toString())
+              return name.toString().includes(courseName.toString()) || name.toString().includes(courseName.toString().toUpperCase())
         })
         var groupSchedule = this.parseGroup(allCourseSlots,group)
         var nextCourseSlot = this.getFirstSlot(groupSchedule)
