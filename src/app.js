@@ -24,7 +24,7 @@ app.use('/alexa', alexaRouter);
 // attach the verifier middleware first because it needs the entire
 // request body, and express doesn't expose this on the request object
 alexaRouter.use(verifier);
-//alexaRouter.use(bodyParser.json())
+alexaRouter.use(bodyParser.json())
 
 //We receive a request from Alexa, the structure is simple and we should parse this request
 //The given information are : the id of the user
