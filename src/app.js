@@ -47,8 +47,8 @@ alexaRouter.post("/", function(req, res) {
                 var value = req.body.request.intent.slots.userClass.value
                 var classVal = value.replace(/\s/g, '').toUpperCase()
                 var course = req.body.request.intent.slots.userCourse.value
-                course = course.charAt(0).toUpperCase() + s.slice(1) // First letter in Upper Case
-                res.json(getNextCourseSession(classVal,"1", course)); // TODO find group and course
+                var courseVal = course.charAt(0).toUpperCase() + s.slice(1) // First letter in Upper Case
+                res.json(getNextCourseSession(classVal,"1", courseVal)); // TODO find group and course
             break;
             case 'registerUserInfoFrench':
                 res.json(registerUser(req,res))
