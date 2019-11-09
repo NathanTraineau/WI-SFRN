@@ -42,7 +42,7 @@ alexaRouter.post("/", function(req, res) {
             case 'GetTomorrowScheduleFrench':
                 var user_class = req.body.request.intent.slots.userClass.value
                 var user_group = req.body.request.intent.slots.userGroup.value
-                if(user_class == null){
+                if(user_class == null && user_group == null){
                   //If the user didn't give any information on his class
                   //We have to search what class he is in
                   const user_auth = isUserAuth(req,res)
@@ -54,7 +54,7 @@ alexaRouter.post("/", function(req, res) {
                   }   
                 }
                 var classVal = user_class.replace(/\s/g, '').toUpperCase()
-                res.json(getTomorrowSchedule(classVal,"1")); // TODO find group
+                res.json(getTomorrowSchedule(classVal,user_group)); // TODO find group
             break;
             case 'GetNextSessionFrench':
                 var value = req.body.request.intent.slots.userClass.value
