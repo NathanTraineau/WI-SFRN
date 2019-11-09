@@ -110,13 +110,15 @@ module.exports = {
         var d = new Date();
         var tomorrow = new Date();
         tomorrow.setDate(d.getDate() + numberOfDayFromToday);
-        tomorrow.setMonth(d.getMonth() + numberOfDayFromToday);
+        tomorrow.setMonth(d.getMonth());
         const sched = this.schedule(user_class);
         const tomorrowSchedule = this.scheduleOftheDay(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
+        console.log(tomorrowSchedule)
         //We get the courses of the group of our user
         const tomorrowScheduleParsedGroup = this.parseGroup(tomorrowSchedule,group)
         //We sort the course so we have them in the time order
         const tomorrowScheduleSorted = this.sortedSlotsFromDay(tomorrowScheduleParsedGroup)
+        
         //We build the sentences to give to alexa per course
         const tomorrowScheduleToArray = plain_text_array(tomorrowScheduleSorted, "tomorrow")
         //We join it in one string
@@ -125,14 +127,17 @@ module.exports = {
         return response;
     },
 
+    
+
 
 
     getNextCourseSession: function(user_class, group, courseName) {
+    //INDEPENDANT OF CLASS GROUP
         const classSchedule = this.schedule(user_class);
         var jsonSchedule = JSON.parse(classSchedule)
         //All scheduled Course
         var allCourseSlots = jsonSchedule.items.filter(({name}) => {
-              return name.toString().includes(courseName.toString()) || name.toString().includes(courseName.toString().toUpperCase())
+              return name.toString().includes(courseName.toString())
         })
         var groupSchedule = this.parseGroup(allCourseSlots,group)
         var nextCourseSlot = this.getFirstSlot(groupSchedule)

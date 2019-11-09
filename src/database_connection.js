@@ -14,21 +14,24 @@ const pool = new Pool({
 
 module.exports = { 
     
-  addUser: function(classe,group,user_id){
-    console.log(req.query.user_id)
-    pool.query('insert into "Users" values ($1, $2, $3)',[classe, group,user_id],(error,results) => {
-      if (error) {
-        throw error
-      }
-      res.status(200).send(`User added with ID: ${results.user_id}`)
+  addUser: function(user_id,user_class,user_group, successCallback, errorCallback){
+    pool.query('insert into "Users" values ($1, $2, $3)',[user_class, user_group,user_id],(err,results) => {
+      if (err) errorCallback(err)
+      successCallback(results.rows[0])
     })
   },
 
-  getUsers: function(req,res,next){
+  updateUser: function(user_id,user_class,user_group, successCallback, errorCallback){
+    pool.query('update "Users" set "class"=$1 , "group"=$2 where "user_id"=$3',[user_class, user_group,user_id],(err,results) => {
+      if (err) errorCallback(err)
+      successCallback(results)
+    })
+  },
+
+  getUsers: function(successCallback, errorCallback){
     pool.query(('SELECT * FROM "Users"'),(err, results) => {
-      if (err) throw err
-      //res.write('<li>'+result.rows[0]+'</li>');
-      res.status(200).json(results.rows)
+      if (err) errorCallback(err)
+      successCallback(results.rows[0])
     })
   },
 
