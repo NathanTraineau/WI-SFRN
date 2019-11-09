@@ -40,8 +40,8 @@ alexaRouter.post("/", function(req, res) {
     } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
         switch (req.body.request.intent.name) {
             case 'GetTomorrowScheduleFrench':
-                var user_class = req.body.request.intent.slots.userClass
-                var user_group = req.body.request.intent.slots.userGroup
+                var user_class = req.body.request.intent.slots.userClass.value
+                var user_group = req.body.request.intent.slots.userGroup.value
                 if(user_class === "undefined" || user_group === "undefined"){
                   //If the user didn't give any information on his class
                   //We have to search what class he is in
@@ -60,9 +60,9 @@ alexaRouter.post("/", function(req, res) {
                  // TODO find group
             break;
             case 'GetNextSessionFrench':
-                var user_class = req.body.request.intent.slots.userClass
-                var user_group = req.body.request.intent.slots.userGroup
-                var course = req.body.request.intent.slots.userCourse
+                var user_class = req.body.request.intent.slots.userClass.value
+                var user_group = req.body.request.intent.slots.userGroup.value
+                var course = req.body.request.intent.slots.userCourse.value
                 var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
                 console.log(user_class)
                 if( typeof user_class == "undefined" || typeof user_group == "undefined"){
@@ -118,8 +118,8 @@ app.post("/", function(req, res) {
   } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
       switch (req.body.request.intent.name) {
           case 'GetTomorrowScheduleFrench':
-              var user_class = req.body.request.intent.slots.userClass
-              var user_group = req.body.request.intent.slots.userGroup
+              var user_class = req.body.request.intent.slots.userClass.value
+              var user_group = req.body.request.intent.slots.userGroup.value
               if(user_class === "undefined" || user_group === "undefined"){
                 //If the user didn't give any information on his class
                 //We have to search what class he is in
@@ -138,9 +138,9 @@ app.post("/", function(req, res) {
                // TODO find group
           break;
           case 'GetNextSessionFrench':
-              var user_class = req.body.request.intent.slots.userClass
-              var user_group = req.body.request.intent.slots.userGroup
-              var course = req.body.request.intent.slots.userCourse
+              var user_class = req.body.request.intent.slots.userClass.value
+              var user_group = req.body.request.intent.slots.userGroup.value
+              var course = req.body.request.intent.slots.userCourse.value
               var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
               console.log(user_class)
               if( typeof user_class == "undefined" || typeof user_group == "undefined"){
@@ -216,9 +216,9 @@ app.listen(port, function() {
 async function registerUser(req,res){
   var value_user_id = req.body.session.user.userId
   var user_id = value_user_id.replace(/\s/g, '').toUpperCase()
-  var value_class = req.body.request.intent.slots.class
+  var value_class = req.body.request.intent.slots.userClass.value
   var user_class = value_class.replace(/\s/g, '').toUpperCase()
-  var value_group = req.body.request.intent.slots.group
+  var value_group = req.body.request.intent.slots.userGroup.value
   var user_group = value_group.replace(/\s/g, '').toUpperCase()
   const resp = u.isUserInfoRight(user_class,user_group)
   const exist = await user_controller.c_getUserById(user_id)
