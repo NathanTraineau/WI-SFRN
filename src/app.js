@@ -12,7 +12,7 @@ var u = require('./utiles');
 var user_controller = require('./user_controller');
 
 // parse application/json
-//app.use(bodyParser.json())
+app.use(bodyParser.json())
 
 
 // ---------------------------------------------------------
