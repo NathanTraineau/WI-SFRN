@@ -108,9 +108,10 @@ module.exports = {
         //This function take the class user, its group and the number of day from today
         //With this information it get the right schedule, parse the result and build a response for alexa.
         var d = new Date();
+        console.log(d)
         var tomorrow = new Date();
         tomorrow.setDate(d.getDate() + numberOfDayFromToday);
-        tomorrow.setMonth(d.getMonth());
+        tomorrow.setMonth(d.getMonth()+1);
         const sched = this.schedule(user_class);
         const tomorrowSchedule = this.scheduleOftheDay(sched,tomorrow.getDate(),tomorrow.getMonth(),tomorrow.getFullYear())
         console.log(tomorrowSchedule)

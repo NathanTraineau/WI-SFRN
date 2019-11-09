@@ -12,7 +12,7 @@ var u = require('./utiles');
 var user_controller = require('./user_controller');
 
 // parse application/json
-//app.use(bodyParser.json())
+app.use(bodyParser.json())
 
 
 // ---------------------------------------------------------
@@ -24,7 +24,7 @@ app.use('/alexa', alexaRouter);
 // attach the verifier middleware first because it needs the entire
 // request body, and express doesn't expose this on the request object
 alexaRouter.use(verifier);
-alexaRouter.use(bodyParser.json())
+//alexaRouter.use(bodyParser.json())
 
 //We receive a request from Alexa, the structure is simple and we should parse this request
 //The given information are : the id of the user
@@ -237,7 +237,7 @@ plain_text_array = function(parsed, action){
                 res = ["Vous n'avez pas de cours demain"];
             } else {
                 res = parsed.courses.map( function(course) {
-                    let info = "Vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location + '<break time="1" />';
+                    let info = "Vous avez cours de " + course.name + " de " + course.start_time + " à " + course.end_time + " en salle " + course.location ;
                     return info;
                 })
             }
