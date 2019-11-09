@@ -1,10 +1,11 @@
 
 const Pool = require('pg').Pool;
 const connectiontring = 'postgres://postgres:91bbd0e19ecf58b2b2f43d6c2d14fb26@dokku-postgres-wi-sfrn-db:5432/wi_sfrn_db';
-var connectionString = "postgres://postgres:postgres@localhost:5432/wave it skill";
+var connectionString = " postgres://postgres:a8e425583269bfba0a9250b092e7b0ce@dokku-postgres-wi-sfrn-db2:5432/wi_sfrn_db2";
 
+var pool = new pg.Pool(connectionString);
 
-const pool = new Pool({
+const poool = new Pool({
   user: "postgres",
   password: "postgres",
   host: "localhost",
