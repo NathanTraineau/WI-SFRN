@@ -42,7 +42,7 @@ alexaRouter.post("/", function(req, res) {
             case 'GetTomorrowScheduleFrench':
                 var user_class = req.body.request.intent.slots.userClass.value
                 var user_group = req.body.request.intent.slots.userGroup.value
-                if(user_class === "undefined" || user_group === "undefined"){
+                if(typeof user_class == 'undefined' || typeof user_group == 'undefined'){
                   //If the user didn't give any information on his class
                   //We have to search what class he is in
                   const user_auth = isUserAuth(req,res)
@@ -65,7 +65,7 @@ alexaRouter.post("/", function(req, res) {
                 var course = req.body.request.intent.slots.userCourse.value
                 var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
                 console.log(user_class)
-                if( typeof user_class == "undefined" || typeof user_group == "undefined"){
+                if( typeof user_class == 'undefined' || typeof user_group == 'undefined'){
                   //If the user didn't give any information on his class
                   //We have to search what class he is in
                   const user_auth = isUserAuth(req,res)
@@ -120,7 +120,7 @@ app.post("/", function(req, res) {
           case 'GetTomorrowScheduleFrench':
               var user_class = req.body.request.intent.slots.userClass.value
               var user_group = req.body.request.intent.slots.userGroup.value
-              if(user_class === "undefined" || user_group === "undefined"){
+              if(typeof user_class == 'undefined' || typeof user_group == 'undefined'){
                 //If the user didn't give any information on his class
                 //We have to search what class he is in
                 const user_auth = isUserAuth(req,res)
