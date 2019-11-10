@@ -24,14 +24,8 @@ app.use('/alexa', alexaRouter);
 // attach the verifier middleware first because it needs the entire
 // request body, and express doesn't expose this on the request object
 alexaRouter.use(verifier);
-//alexaRouter.use(bodyParser.json())
 
-//We receive a request from Alexa, the structure is simple and we should parse this request
-//The given information are : the id of the user
-//What he wants (the schedule for tomorrow, where does the next course take place, update his class)
-//From these information, we should be able to get the class of the user (that we stored previously)
-//And request the good url to get the course from the year
-//We should then parse the response to get what the user wants and send a proper json file in response to alexa.
+//alexaRouter.use(bodyParser.json())
 
 alexaRouter.post("/", function(req, res) {
     if (req.body.request.type === 'LaunchRequest') {
@@ -99,9 +93,7 @@ alexaRouter.post("/", function(req, res) {
 
 // -------------------------------------------------------------
   
-
-let port = 5000;
-app.listen(port, function() {
+app.listen(process.env.PORT || 5000, function() {
     console.log("Server started listening at localhost:" + port);
 });
 
