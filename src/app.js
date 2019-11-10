@@ -94,7 +94,7 @@ alexaRouter.post("/", function(req, res) {
 // -------------------------------------------------------------
   
 app.listen(process.env.PORT || 5000, function() {
-    console.log("Server started listening at localhost:" + port);
+    console.log("Server started listening at localhost:");
 });
 
 
