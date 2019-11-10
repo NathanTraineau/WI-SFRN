@@ -1,5 +1,4 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var xhr = new XMLHttpRequest();
 
 module.exports = {
     // ORDER THE DIFFERENT SLOTS BY HOURS

@@ -34,17 +34,15 @@ alexaRouter.use(verifier);
 //We should then parse the response to get what the user wants and send a proper json file in response to alexa.
 
 alexaRouter.post("/", function(req, res) {
-    //ACTION PAR DEFAULT AU LANCEMENT
     if (req.body.request.type === 'LaunchRequest') {
       res.json(response_to_Alexa("Bonjour, que voulez-vous savoir ?"));
-    } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
+    } else if (req.body.request.type === 'IntentRequest') { //ACTION ASKED BY USER
         switch (req.body.request.intent.name) {
             case 'GetTomorrowScheduleFrench':
                 var user_class = req.body.request.intent.slots.userClass.value
                 var user_group = req.body.request.intent.slots.userGroup.value
                 var classVal = user_class.replace(/\s/g, '').toUpperCase()
                 res.json(getTomorrowSchedule(classVal,user_group));
-                 // TODO find group
             break;
             case 'GetMyTomorrowScheduleFrench':
                 const user_auth = isUserAuth(req,res)
@@ -67,7 +65,6 @@ alexaRouter.post("/", function(req, res) {
                   }else{
                     res.json(response_to_Alexa("Veuillez donner une classe et un groupe valide dans votre requête",false))
                   }
-                 // TODO find group and course
             break;
             case 'GetMyNextSessionFrench':
                 const user_auth_next_session = isUserAuth(req,res)
@@ -75,7 +72,6 @@ alexaRouter.post("/", function(req, res) {
                   if(!result){
                     res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête",false))
                   }else{
-                    //Problem here about an unhandledPromiseRejectWarning 
                       res.json(getNextCourseSession(result.class,result.group, courseVal))
                   }
                 }) 
@@ -101,92 +97,6 @@ alexaRouter.post("/", function(req, res) {
     }
 });
 
-app.post("/", function(req, res) {
-  //ACTION PAR DEFAULT AU LANCEMENT
-  if (req.body.request.type === 'LaunchRequest') {
-    res.json(response_to_Alexa("Bonjour, que voulez-vous savoir ?"));
-  } else if (req.body.request.type === 'IntentRequest') { //ACTION DEMANDEE PAR L'UTILISATEUR
-      switch (req.body.request.intent.name) {
-          case 'GetTomorrowScheduleFrench':
-              var user_class = req.body.request.intent.slots.userClass.value
-              var user_group = req.body.request.intent.slots.userGroup.value
-              var classVal = user_class.replace(/\s/g, '').toUpperCase()
-              res.json(getTomorrowSchedule(classVal,user_group));
-               // TODO find group
-          break;
-          case 'GetMyTomorrowScheduleFrench':
-              const user_auth = isUserAuth(req,res)
-              user_auth.then(function(result){
-                if(!result){
-                  res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête",false))
-                }else{
-                  res.json(getTomorrowSchedule(result.class,result.group)); 
-                }
-              }) 
-          break;
-          case 'GetNextSessionFrench':
-              var user_class = req.body.request.intent.slots.userClass.value
-              var user_group = req.body.request.intent.slots.userGroup.value
-              var course = req.body.request.intent.slots.userCourse.value
-              var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
-                var classVal = user_class.replace(/\s/g, '').toUpperCase()
-                if(u.isUserInfoRight(classVal,user_group)){
-                  res.json(getNextCourseSession(classVal,user_group, courseVal))
-                }else{
-                  res.json(response_to_Alexa("Veuillez donner une classe et un groupe valide dans votre requête",false))
-                }
-               // TODO find group and course
-          break;
-          case 'GetMyNextSessionFrench':
-              const user_auth_next_session = isUserAuth(req,res)
-              user_auth_next_session.then(function(result){
-                if(!result){
-                  res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête",false))
-                }else{
-                  //Problem here about an unhandledPromiseRejectWarning 
-                    res.json(getNextCourseSession(result.class,result.group, courseVal))
-                }
-              }) 
-              break;
-          case 'registerUserInfoFrench':
-              const resp = registerUser(req,res)
-              resp.then( function(result) {
-                switch(result){
-                  case "updated" : res.json(response_to_Alexa("Vos informations ont été modifiées"))
-                  break;
-                  case "registered" : res.json(response_to_Alexa("Vous avez été enregistré")) 
-                  break;
-                  case "unregistered" : res.json(response_to_Alexa("Vous avez rentré des informations non valables"))
-                  break;
-                }
-                
-              })
-          break;
-          default:
-              const response = response_to_Alexa("no data")
-              res.json(response)
-          }
-  }
-});
-
-
-// POUR LES TESTS PCQ SINON PLANTE VU QUE C'EST PAS ALEXA QUI RENVOIE LA REQUETE
-// --------------------------- LOCAL ----------------------------------
-
-async function isUserAuth(req,res) {
-    //If the user didn't give any information on his class
-    //We have to search what class he is in
-    var value_user_id = req.body.session.user.userId
-    var user_id = value_user_id.replace(/\s/g, '').toUpperCase()
-    const user = await user_controller.c_getUserById(user_id)
-      if(!user){
-        return null
-      }
-      else{
-        return user
-      }
-}
-
 // -------------------------------------------------------------
   
 
@@ -195,6 +105,8 @@ app.listen(port, function() {
     console.log("Server started listening at localhost:" + port);
 });
 
+
+// USER MAIN FUNCTION
 async function registerUser(req,res){
   var value_user_id = req.body.session.user.userId
   var user_id = value_user_id.replace(/\s/g, '').toUpperCase()
@@ -217,9 +129,23 @@ async function registerUser(req,res){
   }
 }
 
+async function isUserAuth(req,res) {
+  //If the user didn't give any information on his class
+  //We have to search what class he is in
+  var value_user_id = req.body.session.user.userId
+  var user_id = value_user_id.replace(/\s/g, '').toUpperCase()
+  const user = await user_controller.c_getUserById(user_id)
+    if(!user){
+      return null
+    }
+    else{
+      return user
+    }
+}
+
 // GET THE SCHEDULE FOR TOMORROW
 getTomorrowSchedule = function(user_class, group){
-    return u.getDaySchedule(user_class,group,5);
+    return u.getDaySchedule(user_class,group,1);
 }
 
 // GET THE SCHEDULE FOR TOMORROW
