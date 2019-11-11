@@ -11,7 +11,7 @@ var u = require('./utiles');
 var user_controller = require('./user_controller');
 
 // parse application/json
-app.use(bodyParser.json())
+//app.use(bodyParser.json())
 
 
 
@@ -25,7 +25,7 @@ app.use('/alexa', alexaRouter);
 
 // attach the verifier middleware first because it needs the entire
 // request body, and express doesn't expose this on the request object
-alexaRouter.use(verifier);
+//alexaRouter.use(verifier);
 
 
 alexaRouter.post("/", function(req, res) {
@@ -37,7 +37,11 @@ alexaRouter.post("/", function(req, res) {
                 var user_class = req.body.request.intent.slots.userClass.value
                 var user_group = req.body.request.intent.slots.userGroup.value
                 var classVal = user_class.replace(/\s/g, '').toUpperCase()
-                res.json(getTomorrowSchedule(classVal, user_group));
+                if(u.isUserInfoRight(classVal,user_group)){
+                  res.json(getTomorrowSchedule(classVal, user_group));
+                }else{
+                  res.json(response_to_Alexa("Veuillez donner une classe et un groupe valide dans votre requête", false))
+                }
             break;
 
             case 'GetMyTomorrowScheduleFrench':
@@ -95,76 +99,6 @@ alexaRouter.post("/", function(req, res) {
                 res.json(response)
             }
     }
-});
-
-app.post("/", function(req, res) {
-  if (req.body.request.type === 'LaunchRequest') {
-    res.json(response_to_Alexa("Bonjour, que voulez-vous savoir ?"));
-  } else if (req.body.request.type === 'IntentRequest') {
-      switch (req.body.request.intent.name) {
-          case 'GetTomorrowScheduleFrench':
-              var user_class = req.body.request.intent.slots.userClass.value
-              var user_group = req.body.request.intent.slots.userGroup.value
-              var classVal = user_class.replace(/\s/g, '').toUpperCase()
-              res.json(getTomorrowSchedule(classVal, user_group));
-          break;
-
-          case 'GetMyTomorrowScheduleFrench':
-              const user_auth = isUserAuth(req, res)
-              user_auth.then(function(result){
-                if(!result){
-                  res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête", false))
-                }else{
-                  res.json(getTomorrowSchedule(result.class, result.group));
-                }
-              }) 
-          break;
-
-          case 'GetNextSessionFrench':
-              var user_class = req.body.request.intent.slots.userClass.value
-              var user_group = req.body.request.intent.slots.userGroup.value
-              var course = req.body.request.intent.slots.userCourse.value
-              var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
-                var classVal = user_class.replace(/\s/g, '').toUpperCase()
-                if(u.isUserInfoRight(classVal, user_group)){
-                  res.json(getNextCourseSession(classVal,user_group, courseVal))
-                }else{
-                  res.json(response_to_Alexa("Veuillez donner une classe et un groupe valide dans votre requête", false))
-                }
-          break;
-
-          case 'GetMyNextSessionFrench':
-              const user_auth_next_session = isUserAuth(req, res)
-              user_auth_next_session.then(function(result){
-                if(!result){
-                  res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête", false))
-                }else{
-                  //Problem here about an unhandledPromiseRejectWarning 
-                    res.json(getNextCourseSession(result.class,result.group, courseVal))
-                }
-              }) 
-              break;
-
-          case 'registerUserInfoFrench':
-              const resp = registerUser(req, res)
-              resp.then( function(result) {
-                switch(result){
-                  case "updated" : res.json(response_to_Alexa("Vos informations ont été modifiées"))
-                  break;
-                  case "registered" : res.json(response_to_Alexa("Vous avez été enregistré")) 
-                  break;
-                  case "unregistered" : res.json(response_to_Alexa("Vous avez rentré des informations non valables"))
-                  break;
-                }
-                
-              })
-          break;
-
-          default:
-              const response = response_to_Alexa("no data")
-              res.json(response)
-          }
-  }
 });
 
 // GET USER
