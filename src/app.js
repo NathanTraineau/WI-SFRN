@@ -24,7 +24,7 @@ app.use('/alexa', alexaRouter);
 
 // attach the verifier middleware first because it needs the entire
 // request body, and express doesn't expose this on the request object
-//alexaRouter.use(verifier);
+alexaRouter.use(verifier);
 
 
 alexaRouter.post("/", function(req, res) {
