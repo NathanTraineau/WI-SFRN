@@ -11,8 +11,6 @@ const client = new Client({
   ssl: true
 })
 client.connect(function(err){
-  //if(err) throw err
-  //else console.log("fdsiuqljhgl")
 })
 
 module.exports = { 
