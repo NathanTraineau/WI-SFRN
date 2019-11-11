@@ -1,11 +1,12 @@
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = {
+
     // ORDER THE DIFFERENT SLOTS BY HOURS
+    // @params : This function get a JSON
+    // @return : the object corresponding to the given JSON text
+    //assert(typeof(scheduleToSort) == String.type)
     sortedSlotsFromDay: function(scheduleToSort, scheduleSorted = JSON.parse('{"courses":[]}')) {
-        //This function get a JSON
-        //return the object corresponding to the given JSON text
-        //assert(typeof(scheduleToSort) == String.type)
         if(( scheduleToSort.length === 0 )){
             //We check whether we finished to sort or not
             return scheduleSorted
@@ -32,10 +33,10 @@ module.exports = {
     },
 
     // ORDER THE DIFFERENT SLOTS BY DATE
+    // @params : This function get a JSON
+    // @return : the object corresponding to the given JSON text
+    //assert(typeof(scheduleToSort) == String.type)
     sortedSlotsFromYear: function(scheduleToSort, scheduleSorted = JSON.parse('{"courses":[]}')) {
-        //This function get a JSON
-        //return the object corresponding to the given JSON text
-        //assert(typeof(scheduleToSort) == String.type)
         if(( scheduleToSort.length === 0 )){
             //We check whether we finished to sort or not
             return scheduleSorted
@@ -103,9 +104,9 @@ module.exports = {
 
 
     // GET THE SCHEDULE FOR THE DAY X
+    // @params : This function take the user class, its group and the number of day from today
+    // With this information it get the right schedule, parse the result and build a response for alexa.
     getDaySchedule: function(user_class, group, numberOfDayFromToday){
-        //This function take the class user, its group and the number of day from today
-        //With this information it get the right schedule, parse the result and build a response for alexa.
         var d = new Date();
         console.log(d)
         var tomorrow = new Date();
@@ -129,19 +130,18 @@ module.exports = {
 
     
 
-
-
+    // GET THE NEXT SESSION OF THE COURSE X FOR THE CLASS Y AND GROUP Z
+    // @params : This function take the user class, its group and the course name
+    // With this information it get the right schedule, parse the result and build a response for alexa.
     getNextCourseSession: function(user_class, group, courseName) {
-    //INDEPENDANT OF CLASS GROUP
         const classSchedule = this.schedule(user_class);
         var jsonSchedule = JSON.parse(classSchedule)
-        //All scheduled Course
+        //All slots of the Course
         var allCourseSlots = jsonSchedule.items.filter(({name}) => {
-              return name.toString().includes(courseName.toString())
+              return name.toString().includes(courseName.toString()) || name.toString().includes(courseName.toString().toUpperCase())
         })
         var groupSchedule = this.parseGroup(allCourseSlots,group)
         var nextCourseSlot = this.getFirstSlot(groupSchedule)
-
 
         //We build the sentences to give to alexa per course
         const NextCourseScheduleToArray = plain_text_array(nextCourseSlot, "next")
@@ -151,7 +151,8 @@ module.exports = {
         return response;
     },
 
-
+    // GET THE FIRST SLOT FROM A SCHEDULE
+    // @params : This function take a schedule
     getFirstSlot(schedule) {
         var res = this.sortedSlotsFromYear(schedule)
         res['courses'] = [this.sortedSlotsFromYear(schedule)['courses'][0]]
@@ -160,13 +161,13 @@ module.exports = {
 
 
 
-    // GET SCHEDULE FOR THE GIVEN GROUP (LIKE "OPTION 1")
+    // GET SCHEDULE FILTER WITH THE GIVEN GROUP
     parseGroup: function(schedule, group){
         return schedule.filter(function(course) {
             if(course.hasOwnProperty("grp")){
-              //The only case we don't return is when there is a group number
-              //and it is not the one given.
-              //We keep every other courses.
+              // The only case we don't return it, is when there is a group number
+              // and it is not the one given.
+              // We keep every other courses.
               return course.grp === group.toString() || course.grp === ""
             }else{
               return true
@@ -174,7 +175,7 @@ module.exports = {
         })
     },
 
-    // GET THE ALL JSON SCHEDULE FOR WAVE IT API
+    // GET THE ALL JSON SCHEDULE FROM WAVE IT API
     schedule: function(user_class) {
         var xmlHttp = new XMLHttpRequest();
         xmlHttp.open( "GET", `https://wave-it.fr/application/cache/json/${user_class}.json`, false ); // false for synchronous requests
@@ -186,10 +187,10 @@ module.exports = {
     },
 
 
-    // SCHEDULE OF THE D DAY
+    // GET SCHEDULE OF THE D DAY
+    // @params : This function get all courses from one specific day
+    // @return : the object corresponding to the given JSON text
     scheduleOftheDay: function(sched, day_i, month_i,year_i) {
-        //This function get all of the course from one specific day
-        //return the object corresponding to the given JSON text
         var s = JSON.parse(sched)
         return s.items.filter(({
               date,
@@ -203,11 +204,10 @@ module.exports = {
     },
 
 
-    // SCHEDULE OF THE D DAY
+    // CHECK IF THE GIVEN USER CLASS AND USER GROUP EXIST
+    // @params : user class and user group
+    // @return : It return true if the given data are right, false if not.
     isUserInfoRight: function(user_class, user_group) {
-        //This function check whether the given class and group 
-        //are real values or they have been misspelled
-        //It return true if the given data are right, false if not.
         const classSchedule = this.schedule(user_class);
         if(classSchedule === null){
             return false
@@ -223,7 +223,9 @@ module.exports = {
     },
 
 
-    // NOT USE FOR THE MOMENT
+    // GET THE DATE OF A SLOT COURSE
+    // @params : a slot
+    // @return : the date of this slot
     getSlotDate: function(slot) {
           var day = slot.date;
             var month = slot.month;
@@ -241,7 +243,5 @@ module.exports = {
             var date = Date.parse(stringDate);
             return date;
     },
-
-
 
 }
