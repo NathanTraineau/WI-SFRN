@@ -12,7 +12,7 @@ var u = require('./utiles');
 var user_controller = require('./user_controller');
 
 // parse application/json
-//app.use(bodyParser.json())
+app.use(bodyParser.json())
 
 
 // ---------------------------------------------------------
@@ -27,7 +27,7 @@ alexaRouter.use(verifier);
 
 //alexaRouter.use(bodyParser.json())
 
-alexaRouter.post("/", function(req, res) {
+app.post("/", function(req, res) {
     if (req.body.request.type === 'LaunchRequest') {
       res.json(response_to_Alexa("Bonjour, que voulez-vous savoir ?"));
     } else if (req.body.request.type === 'IntentRequest') { //ACTION ASKED BY USER
