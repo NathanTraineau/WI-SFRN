@@ -1,0 +1,367 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "wave it",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetTomorrowScheduleFrench",
+                    "slots": [
+                        {
+                            "name": "userClass",
+                            "type": "Classes",
+                            "samples": [
+                                "Ma classe est {userClass}",
+                                "{userClass}"
+                            ]
+                        },
+                        {
+                            "name": "userGroup",
+                            "type": "Groups",
+                            "samples": [
+                                "{userGroup}",
+                                "Mon groupe est {userGroup}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "Quel cours j'ai demain",
+                        "demain",
+                        "demain {userClass} en groupe {userGroup}",
+                        "Quel emploi du temps les {userClass} en groupe {userGroup}  ont demain",
+                        "Quel est l emploi du temps des {userClass} en groupe {userGroup} demain",
+                        "Quels cours ont les {userClass} demain",
+                        "Quels cours les {userClass} ont demain",
+                        "Qu est ce qu'ont les {userClass}"
+                    ]
+                },
+                {
+                    "name": "GetNextSessionFrench",
+                    "slots": [
+                        {
+                            "name": "userCourse",
+                            "type": "Courses",
+                            "samples": [
+                                "Le cours est {userCourse}",
+                                "{userCourse}"
+                            ]
+                        },
+                        {
+                            "name": "userClass",
+                            "type": "Classes",
+                            "samples": [
+                                "Ma classe est {userClass}",
+                                "{userClass}"
+                            ]
+                        },
+                        {
+                            "name": "userGroup",
+                            "type": "Groups",
+                            "samples": [
+                                "Mon groupe est {userGroup}",
+                                "{userGroup}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "prochaine fois {userCourse}",
+                        "Quand est programmé le prochain cours de {userCourse}",
+                        "Quand est ce que est le prochain cours de {userCourse}",
+                        "Quand est ce que j ai {userCourse}",
+                        "Quand les {userClass} ont le prochain cours de {userCourse}",
+                        "Quand est ce que les {userClass} ont {userCourse}",
+                        "Quand est-ce que les {userClass} ont le prochain cours de {userCourse}",
+                        "Quand est-ce que j'ai le prochain cours de {userCourse}",
+                        "Quand est le prochain cours de {userCourse}",
+                        "Quand est la prochaine session de {userCourse}",
+                        "Quand est la prochaine heure de {userCourse}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Classes",
+                    "values": [
+                        {
+                            "id": "IG3",
+                            "name": {
+                                "value": "I G trois"
+                            }
+                        },
+                        {
+                            "id": "IG4",
+                            "name": {
+                                "value": "I G quatre"
+                            }
+                        },
+                        {
+                            "id": "IG5",
+                            "name": {
+                                "value": "I G cinq"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Courses",
+                    "values": [
+                        {
+                            "id": "Audit",
+                            "name": {
+                                "value": "Audit"
+                            }
+                        },
+                        {
+                            "id": "RFID",
+                            "name": {
+                                "value": "RFID"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Groups",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "B"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "A"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "deux"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "un"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "2"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "1"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "GetTomorrowScheduleFrench",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "userClass",
+                            "type": "Classes",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.397581301005.629937787458"
+                            }
+                        },
+                        {
+                            "name": "userGroup",
+                            "type": "Groups",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.397581301005.1553886903119"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "GetNextSessionFrench",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "userCourse",
+                            "type": "Courses",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.167463994107.349560619577"
+                            }
+                        },
+                        {
+                            "name": "userClass",
+                            "type": "Classes",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.349964634451.890653979055"
+                            }
+                        },
+                        {
+                            "name": "userGroup",
+                            "type": "Groups",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.129675226530.366849863720"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.1289230046135.346778354420",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quel est votre groupe ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1289230046135.129214161098",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quelle est votre classe ?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.671110089513.1390542430970",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Est ce bien {userClass}"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.671110089513.195076546454",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Est ce que c'est votre groupe {userGroup}"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.653588635617.1056488480782",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quel est votre classe ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.167463994107.349560619577",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quel est le cours ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1138008783191.1038417444273",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quelle classe ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.853417093181.303142372929",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "classe"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.853417093181.1017769726650",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "groupe"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.349964634451.890653979055",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quelle est votre classe ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.397581301005.629937787458",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quelle est votre classe"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.397581301005.1553886903119",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quel est votre groupe "
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1553009521470.530792974814",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quel est ce cours ?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.129675226530.366849863720",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Quel est votre groupe ?"
+                    }
+                ]
+            }
+        ]
+    }
+}
