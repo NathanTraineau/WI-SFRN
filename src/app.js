@@ -15,7 +15,6 @@ app.use(bodyParser.json())
 
 
 
-
 // ---------------------------------------------------------
 // ----------------------- FUNCTIONS -----------------------
 // ---------------------------------------------------------
@@ -35,11 +34,11 @@ alexaRouter.post("/", function(req, res) {
         switch (req.body.request.intent.name) {
             case 'GetTomorrowScheduleFrench':
                 var user_class = req.body.request.intent.slots.userClass.value
-                var user_group = req.body.request.intent.slots.userGroup.value
+                var user_group = req.body.request.intent.slots.userGroup.value.toUpperCase()
                 var classVal = user_class.replace(/\s/g, '').toUpperCase()
-                if(u.isUserInfoRight(classVal,user_group)){
+                if (u.isUserInfoRight(classVal, user_group)) {
                   res.json(getTomorrowSchedule(classVal, user_group));
-                }else{
+                } else {
                   res.json(response_to_Alexa("Veuillez donner une classe et un groupe valide dans votre requête", false))
                 }
             break;
@@ -47,34 +46,34 @@ alexaRouter.post("/", function(req, res) {
             case 'GetMyTomorrowScheduleFrench':
                 const user_auth = isUserAuth(req, res)
                 user_auth.then(function(result){
-                  if(!result){
+                  if (!result) {
                     res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête", false))
-                  }else{
-                    res.json(getTomorrowSchedule(result.class,result.group)); 
+                  } else {
+                    res.json(getTomorrowSchedule(result.class, result.group.toUpperCase()));
                   }
                 }) 
             break;
 
             case 'GetNextSessionFrench':
                 var user_class = req.body.request.intent.slots.userClass.value
-                var user_group = req.body.request.intent.slots.userGroup.value
+                var user_group = req.body.request.intent.slots.userGroup.value.toUpperCase()
                 var course = req.body.request.intent.slots.userCourse.value
                 var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
-                  var classVal = user_class.replace(/\s/g, '').toUpperCase()
-                  if(u.isUserInfoRight(classVal,user_group)){
-                    res.json(getNextCourseSession(classVal,user_group, courseVal))
-                  }else{
+                var classVal = user_class.replace(/\s/g, '')
+                if (u.isUserInfoRight(classVal, user_group)) {
+                    res.json(getNextCourseSession(classVal, user_group, courseVal))
+                } else {
                     res.json(response_to_Alexa("Veuillez donner une classe et un groupe valide dans votre requête", false))
-                  }
+                }
             break;
 
             case 'GetMyNextSessionFrench':
                 const user_auth_next_session = isUserAuth(req, res)
-                user_auth_next_session.then(function(result){
-                  if(!result){
+                user_auth_next_session.then(function(result) {
+                  if (!result) {
                     res.json(response_to_Alexa("Veuillez-vous enregistrer s'il vous plaît, ou donner une classe et un groupe dans votre requête", false))
-                  }else{
-                      res.json(getNextCourseSession(result.class,result.group, courseVal))
+                  } else {
+                      res.json(getNextCourseSession(result.class, result.group, courseVal))
                   }
                 }) 
                 break;
@@ -82,7 +81,7 @@ alexaRouter.post("/", function(req, res) {
             case 'registerUserInfoFrench':
                 const resp = registerUser(req, res)
                 resp.then( function(result) {
-                  switch(result){
+                  switch(result) {
                     case "updated" : res.json(response_to_Alexa("Vos informations ont été modifiées"))
                     break;
                     case "registered" : res.json(response_to_Alexa("Vous avez été enregistré")) 

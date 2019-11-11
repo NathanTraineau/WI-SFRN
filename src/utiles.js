@@ -138,9 +138,9 @@ module.exports = {
         var jsonSchedule = JSON.parse(classSchedule)
         //All slots of the Course
         var allCourseSlots = jsonSchedule.items.filter(({name}) => {
-              return name.toString().includes(courseName.toString()) || name.toString().includes(courseName.toString().toUpperCase())
+              return name.toString().toUpperCase().includes(courseName.toString().toUpperCase())
         })
-        var groupSchedule = this.parseGroup(allCourseSlots,group)
+        var groupSchedule = this.parseGroup(allCourseSlots, group)
         var nextCourseSlot = this.getFirstSlot(groupSchedule)
 
         //We build the sentences to give to alexa per course
