@@ -37,7 +37,9 @@ module.exports = {
     // @return : the object corresponding to the given JSON text
     //assert(typeof(scheduleToSort) == String.type)
     sortedSlotsFromYear: function(scheduleToSort, scheduleSorted = JSON.parse('{"courses":[]}')) {
-        if(( scheduleToSort.length === 0 )){
+        var scheduleTS = scheduleToSort
+
+        if(( scheduleTS.length === 0 )){
             //We check whether we finished to sort or not
             return scheduleSorted
         }
@@ -49,12 +51,11 @@ module.exports = {
         var minTime = 100
 
         var nextCourse;
-
-        scheduleToSort = scheduleToSort.filter( course => {
+        var filteredScheduleTS = scheduleTS.filter( course => {
             return this.getSlotDate(course) > now
         })
 
-        scheduleToSort.filter( function(course) {
+        var filteredScheduleTS2 = filteredScheduleTS.filter( function(course) {
             var day = course.date
             var month = course.month
             var year = course.year
@@ -93,8 +94,7 @@ module.exports = {
             }
         })
 
-        var d = scheduleToSort.filter(course => {
-
+        var d = filteredScheduleTS2.filter(course => {
             return course != nextCourse;
         })
 
@@ -227,21 +227,21 @@ module.exports = {
     // @params : a slot
     // @return : the date of this slot
     getSlotDate: function(slot) {
-          var day = slot.date;
-            var month = slot.month;
-            var year = slot.year;
-            var splited = slot.start_time.split(":");
-            var hour = splited[0];
-            var minute = splited[1];
+        var day = slot.date;
+        var month = slot.month;
+        var year = slot.year;
+        var splited = slot.start_time.split(":");
+        var hour = splited[0];
+        var minute = splited[1];
 
-            if (month.length == 1) { var formatedMonth = "0" + month}
-            else {var formatedMonth = month;}
-            if (day.length == 1) { var formatedDay = "0" + day}
-                     else {var formatedDay = day;}
+        if (month.length == 1) { var formatedMonth = "0" + month}
+        else {var formatedMonth = month;}
+        if (day.length == 1) { var formatedDay = "0" + day}
+                 else {var formatedDay = day;}
 
-            var stringDate = year + "-" + formatedMonth + "-" + formatedDay + "T" + hour + ":" + minute + ":00";
-            var date = Date.parse(stringDate);
-            return date;
+        var stringDate = year + "-" + formatedMonth + "-" + formatedDay + "T" + hour + ":" + minute + ":00";
+        var date = Date.parse(stringDate);
+        return date;
     },
 
 }

@@ -55,7 +55,7 @@ alexaRouter.post("/", function(req, res) {
             break;
 
             case 'GetNextSessionFrench':
-                var user_class = req.body.request.intent.slots.userClass.value
+                var user_class = req.body.request.intent.slots.userClass.value.toUpperCase()
                 var user_group = req.body.request.intent.slots.userGroup.value.toUpperCase()
                 var course = req.body.request.intent.slots.userCourse.value
                 var courseVal = course.charAt(0).toUpperCase() + course.slice(1) // First letter in Upper Case
