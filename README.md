@@ -1,4 +1,10 @@
-### Alexa application 
+### Wave It Application
+> Alexa application 
+
+"Tell me my schedule"
+
+The purpose of this Alexa application is for the user to be able to ask alexa for information about his or her schedule. Notably which courses he has tomorrow, and when is his next course in his favorite subject.
+
 We receive a request from Alexa, the structure is simple and we should parse this request
 
 The given information are : the id of the user and other informations about its request
